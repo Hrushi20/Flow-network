@@ -50,7 +50,7 @@ async fn handler(headers: Vec<(String, String)>, _qry: HashMap<String, Value>, _
     let lucky_num = fastrand::usize(..v.len()) as i32;
 
     if lucky_num == guess {
-       resp = format!("Congrats!!! You won the lottery!!!");
+       resp = format!("Congrats!!! You won the lottery:)!!!");
         send_response(
             200,
             vec![(String::from("content-type"), String::from("text/html"))],
@@ -59,7 +59,7 @@ async fn handler(headers: Vec<(String, String)>, _qry: HashMap<String, Value>, _
         return;
     }
 
-    resp = format!("You entered: {}. The lucky number is:{}. Try again to improve you luck",guess,lucky_num);
+    resp = format!("Out of luck. You entered: {}. The lucky number is:{} :(",guess,lucky_num);
     send_response(
         200,
         vec![(String::from("content-type"), String::from("text/html"))],
