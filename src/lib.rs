@@ -2,6 +2,12 @@ use lambda_flows::{request_received, send_response};
 use flowsnet_platform_sdk::logger;
 use std::collections::HashMap;
 use serde_json::Value;
+use serde::{Deserialize};
+
+#[derive(Debug, Deserialize)]
+struct Lottery {
+    guess: i32
+}
 
 #[no_mangle]
 #[tokio::main(flavor = "current_thread")]
@@ -17,10 +23,11 @@ async fn handler(headers: Vec<(String, String)>, qry: HashMap<String, Value>, _b
     log::info!("Headers -- {:?}", headers);
 
     let msg = qry.get("msg").unwrap();
-    let guess = qry.get("guess").unwrap().as_i64().unwrap();
     // let msg = String::from_utf8(body).unwrap_or("".to_string());
-    let resp = format!("Welcome to flows.network.\nYou just said: '{}' '{}'.\nLearn more at: https://github.com/flows-network/hello-world\n", msg,guess);
 
+    let lottery:Lottery = serde_json::from_slice(&_body).unwrap();
+
+    let resp = format!("Welcome to flows.network.\nYou just said: '{}' '{}'.\nLearn more at: https://github.com/flows-network/hello-world\n", msg,lottery.guess);
     send_response(
         200,
         vec![(String::from("content-type"), String::from("text/html"))],

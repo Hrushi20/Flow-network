@@ -84,6 +84,7 @@ dependencies = [
  "flowsnet-platform-sdk",
  "lambda-flows",
  "log",
+ "serde",
  "serde_json",
  "tokio_wasi",
 ]
