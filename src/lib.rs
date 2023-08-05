@@ -18,14 +18,22 @@ pub async fn run() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn handler(headers: Vec<(String, String)>, qry: HashMap<String, Value>, _body: Vec<u8>) {
+async fn handler(headers: Vec<(String, String)>, _qry: HashMap<String, Value>, _body: Vec<u8>) {
     logger::init();
     log::info!("Headers -- {:?}", headers);
 
-    let msg = qry.get("msg").unwrap();
-    // let msg = String::from_utf8(body).unwrap_or("".to_string());
-
-    let lottery:Lottery = serde_json::from_slice(&_body).unwrap();
+    let lottery:Lottery = match serde_json::from_slice(&_body) {
+        Ok(res) => res,
+        Err(err) => {
+            let resp = format!("Invalid body format. Check the readme. Err:{}",err);
+            send_response(
+                200,
+                vec![(String::from("content-type"), String::from("text/html"))],
+                resp.as_bytes().to_vec(),
+            );
+            return;
+        }
+    };
 
     let resp;
     let guess = lottery.guess;
@@ -51,7 +59,7 @@ async fn handler(headers: Vec<(String, String)>, qry: HashMap<String, Value>, _b
         return;
     }
 
-    resp = format!("Out of Luck!!! Try again get more luck.");
+    resp = format!("You entered: {}. The lucky number is:{}. Try again to improve you luck",guess,lucky_num);
     send_response(
         200,
         vec![(String::from("content-type"), String::from("text/html"))],
