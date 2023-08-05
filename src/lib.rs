@@ -27,7 +27,31 @@ async fn handler(headers: Vec<(String, String)>, qry: HashMap<String, Value>, _b
 
     let lottery:Lottery = serde_json::from_slice(&_body).unwrap();
 
-    let resp = format!("Welcome to flows.network.\nYou just said: '{}' '{}'.\nLearn more at: https://github.com/flows-network/hello-world\n", msg,lottery.guess);
+    let resp;
+    let guess = lottery.guess;
+    if guess < 0 || guess > 3 {
+       resp = format!("Number entered {} not in range [0-3] inclusive",guess);
+        send_response(
+            200,
+            vec![(String::from("content-type"), String::from("text/html"))],
+            resp.as_bytes().to_vec()
+        );
+        return;
+    }
+    let v = vec![0,1, 2, 3];
+    let lucky_num = fastrand::usize(..v.len()) as i32;
+
+    if lucky_num == guess {
+       resp = format!("Congrats!!! You won the lottery!!!");
+        send_response(
+            200,
+            vec![(String::from("content-type"), String::from("text/html"))],
+            resp.as_bytes().to_vec()
+        );
+        return;
+    }
+
+    resp = format!("Out of Luck!!! Try again get more luck.");
     send_response(
         200,
         vec![(String::from("content-type"), String::from("text/html"))],
