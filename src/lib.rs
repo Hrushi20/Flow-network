@@ -59,7 +59,7 @@ async fn handler(headers: Vec<(String, String)>, _qry: HashMap<String, Value>, _
         return;
     }
 
-    resp = format!("Out of luck. You entered: {}. The lucky number is:{} :(",guess,lucky_num);
+    resp = format!("Out of luck. You entered: {}. The lucky number is: {} :(",guess,lucky_num);
     send_response(
         200,
         vec![(String::from("content-type"), String::from("text/html"))],
