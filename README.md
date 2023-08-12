@@ -15,7 +15,7 @@ curl --request POST  -H "Content-Type: application/json" --data '{ "guess" : 2}'
 ## Game Rules
 * Guess a number between 0-3 inclusive.
 * Any number below 0 and greater than 3 throws an error.
-* The guess field takes number data type as input (not string).
+* The guess field takes integer data type as input (not string/float/bool).
 * Keep calling the API until you win the Lottery.
 
 Results:
